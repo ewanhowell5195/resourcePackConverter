@@ -1,0 +1,74 @@
+{
+	"pack_format": {
+		"old": 4,
+		"new": 5
+	},
+	"special": [
+		"chests"
+	],
+	"files": {
+		"move": {
+			"assets/minecraft/textures/entity/iron_golem.png": "assets/minecraft/textures/entity/iron_golem/iron_golem.png"
+		},
+		"remove": [
+			"assets/minecraft/textures/entity/chest/christmas_double.png",
+			"assets/minecraft/textures/entity/chest/normal_double.png",
+			"assets/minecraft/textures/entity/chest/trapped_double.png",
+			"assets/minecraft/textures/gui/presets/chaos.png",
+			"assets/minecraft/textures/gui/presets/delight.png",
+			"assets/minecraft/textures/gui/presets/drought.png",
+			"assets/minecraft/textures/gui/presets/luck.png",
+			"assets/minecraft/textures/gui/presets/madness.png",
+			"assets/minecraft/textures/gui/presets/water.png"
+		],
+		"new": [
+			"assets/minecraft/blockstates/bee_nest.json",
+			"assets/minecraft/blockstates/beehive.json",
+			"assets/minecraft/blockstates/honey_block.json",
+			"assets/minecraft/blockstates/honeycomb_block.json",
+			"assets/minecraft/models/block/bee_nest.json",
+			"assets/minecraft/models/block/bee_nest_honey.json",
+			"assets/minecraft/models/block/beehive.json",
+			"assets/minecraft/models/block/beehive_honey.json",
+			"assets/minecraft/models/block/honey_block.json",
+			"assets/minecraft/models/block/honeycomb_block.json",
+			"assets/minecraft/models/item/bee_nest.json",
+			"assets/minecraft/models/item/bee_spawn_egg.json",
+			"assets/minecraft/models/item/beehive.json",
+			"assets/minecraft/models/item/honey_block.json",
+			"assets/minecraft/models/item/honey_bottle.json",
+			"assets/minecraft/models/item/honeycomb.json",
+			"assets/minecraft/models/item/honeycomb_block.json",
+			"assets/minecraft/textures/block/bee_nest_bottom.png",
+			"assets/minecraft/textures/block/bee_nest_front.png",
+			"assets/minecraft/textures/block/bee_nest_front_honey.png",
+			"assets/minecraft/textures/block/bee_nest_side.png",
+			"assets/minecraft/textures/block/bee_nest_top.png",
+			"assets/minecraft/textures/block/beehive_end.png",
+			"assets/minecraft/textures/block/beehive_front.png",
+			"assets/minecraft/textures/block/beehive_front_honey.png",
+			"assets/minecraft/textures/block/beehive_side.png",
+			"assets/minecraft/textures/block/honey_block_bottom.png",
+			"assets/minecraft/textures/block/honey_block_side.png",
+			"assets/minecraft/textures/block/honey_block_top.png",
+			"assets/minecraft/textures/block/honeycomb_block.png",
+			"assets/minecraft/textures/entity/bee/bee.png",
+			"assets/minecraft/textures/entity/bee/bee_angry.png",
+			"assets/minecraft/textures/entity/bee/bee_angry_nectar.png",
+			"assets/minecraft/textures/entity/bee/bee_nectar.png",
+			"assets/minecraft/textures/entity/bee/bee_stinger.png",
+			"assets/minecraft/textures/entity/chest/christmas_left.png",
+			"assets/minecraft/textures/entity/chest/christmas_right.png",
+			"assets/minecraft/textures/entity/chest/normal_left.png",
+			"assets/minecraft/textures/entity/chest/normal_right.png",
+			"assets/minecraft/textures/entity/chest/trapped_left.png",
+			"assets/minecraft/textures/entity/chest/trapped_right.png",
+			"assets/minecraft/textures/entity/iron_golem/iron_golem_crackiness_high.png",
+			"assets/minecraft/textures/entity/iron_golem/iron_golem_crackiness_low.png",
+			"assets/minecraft/textures/entity/iron_golem/iron_golem_crackiness_medium.png",
+			"assets/minecraft/textures/item/honey_bottle.png",
+			"assets/minecraft/textures/item/honeycomb.png",
+			"assets/minecraft/textures/map/map_background_checkerboard.png"
+		]
+	}
+}

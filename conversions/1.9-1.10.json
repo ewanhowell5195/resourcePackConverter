@@ -1,0 +1,31 @@
+{
+	"files": {
+		"new": [
+			"assets/minecraft/blockstates/bone_block.json",
+			"assets/minecraft/blockstates/magma.json",
+			"assets/minecraft/blockstates/nether_wart_block.json",
+			"assets/minecraft/blockstates/red_nether_brick.json",
+			"assets/minecraft/blockstates/structure_void.json",
+			"assets/minecraft/models/block/bone_block.json",
+			"assets/minecraft/models/block/magma.json",
+			"assets/minecraft/models/block/nether_wart_block.json",
+			"assets/minecraft/models/block/red_nether_brick.json",
+			"assets/minecraft/models/block/structure_void.json",
+			"assets/minecraft/models/item/bone_block.json",
+			"assets/minecraft/models/item/magma.json",
+			"assets/minecraft/models/item/nether_wart_block.json",
+			"assets/minecraft/models/item/red_nether_brick.json",
+			"assets/minecraft/models/item/structure_void.json",
+			"assets/minecraft/textures/blocks/bone_block_side.png",
+			"assets/minecraft/textures/blocks/bone_block_top.png",
+			"assets/minecraft/textures/blocks/magma.png",
+			"assets/minecraft/textures/blocks/nether_wart_block.png",
+			"assets/minecraft/textures/blocks/red_nether_brick.png",
+			"assets/minecraft/textures/entity/bear/polarbear.png",
+			"assets/minecraft/textures/entity/skeleton/stray.png",
+			"assets/minecraft/textures/entity/skeleton/stray_overlay.png",
+			"assets/minecraft/textures/entity/zombie/husk.png",
+			"assets/minecraft/textures/items/structure_void.png"
+		]
+	}
+}

@@ -1,0 +1,28 @@
+{
+	"chests": {
+		"single": [
+			"assets/minecraft/textures/entity/chest/christmas.png",
+			"assets/minecraft/textures/entity/chest/ender.png",
+			"assets/minecraft/textures/entity/chest/normal.png",	
+			"assets/minecraft/textures/entity/chest/trapped.png"
+		],
+		"doubleUpgrade": [
+			"assets/minecraft/textures/entity/chest/christmas_double.png",
+			"assets/minecraft/textures/entity/chest/normal_double.png",
+			"assets/minecraft/textures/entity/chest/trapped_double.png"
+		],
+		"doubleDowngrade": {
+			"assets/minecraft/textures/entity/chest/christmas_left.png": "assets/minecraft/textures/entity/chest/christmas_right.png",
+			"assets/minecraft/textures/entity/chest/normal_left.png": "assets/minecraft/textures/entity/chest/normal_right.png",
+			"assets/minecraft/textures/entity/chest/trapped_left.png": "assets/minecraft/textures/entity/chest/trapped_right.png"
+		}
+	},
+	"leaves": [
+		"assets/minecraft/textures/blocks/leaves_acacia.png",
+		"assets/minecraft/textures/blocks/leaves_big_oak.png",
+		"assets/minecraft/textures/blocks/leaves_birch.png",
+		"assets/minecraft/textures/blocks/leaves_jungle.png",
+		"assets/minecraft/textures/blocks/leaves_oak.png",
+		"assets/minecraft/textures/blocks/leaves_spruce.png"
+	]
+}
