@@ -11,29 +11,28 @@ from re import search
 import sys
 
 try:
-
 	def resource_path(relative_path):
 		try:
 			base_path = sys._MEIPASS
 		except Exception:
 			base_path = path.abspath(".")
-	
+
 		return path.join(base_path, relative_path)
 
 	def converter():
 		gui=Tk().withdraw()
-	
-		directory = askdirectory(initialdir = r"E:\Programming\Python\Converter\packs", title = "Select Pack")
+
+		directory = askdirectory(title = "Select Pack")
 		if directory == "":
 			input("No folder selected\nPress ENTER to quit...")
 			sys.exit(0)
-	
+
 		directorySplit = directory.split("/")
 		directorySplit.pop()
-	
+
 		version = input("Enter input version: ")
 		userOutput = input("Enter output version: ")
-	
+
 		if not version.split(".")[0] == "1" or not userOutput.split(".")[0] == "1":
 			input("Invalid version\nPress ENTER to quit...")
 			sys.exit(0)
@@ -53,13 +52,13 @@ try:
 		except:
 			input("Invalid version\nPress ENTER to quit...")
 			sys.exit(0)
-	
+
 		outputDirectory = f"{directory}_{userOutput}"
-	
+
 		print("Copying pack...")
-	
+
 		copy_tree(directory, outputDirectory)
-	
+
 		emissiveString = None
 		emissiveDirectory = None
 		emissiveDir = path.join(outputDirectory, "assets/minecraft/optifine/emissive.properties")
@@ -71,16 +70,16 @@ try:
 		if emissiveDirectory != None:
 			try:
 				with open(emissiveDirectory) as propertiesFile:
-					emissiveString = search("suffix_emissive=(.+)", propertiesFile.read()).group(1)
+					emissiveString = search("suffix.emissive=(.+)", propertiesFile.read()).group(1)
 				print(f'Emissive extention found and set as: {emissiveString}')
 			except:
 				print("Invalid emissive.properties. Skipping...")
-	
+
 		if upgrade == True:
 			outputCheck = f"{userOutput.split('.')[0]}.{int(userOutput.split('.')[1])+1}"
 		else:
 			outputCheck = f"{userOutput.split('.')[0]}.{int(userOutput.split('.')[1])-1}"
-	
+
 		while not outputVersion == outputCheck:
 			print(f"\n\n\nConverting from {version} to {outputVersion}\n\n\n")
 			
@@ -88,25 +87,28 @@ try:
 				conversionJSON = f"{version}-{outputVersion}.json"
 			else:
 				conversionJSON = f"{outputVersion}-{version}.json"
-	
+
 			with open(resource_path(path.join("conversions", conversionJSON))) as jsonFile:
 				data = load(jsonFile)
-	
+
 			if "pack_format" in data:
 				mcmetaDir = path.join(outputDirectory, "pack.mcmeta")
 				if path.isfile(mcmetaDir):
-					with open(mcmetaDir) as json_file:
-						packMcmeta = load(json_file)
-					if upgrade == True:
-						packMcmeta["pack"]["pack_format"] = data["pack_format"]["new"]
-						print(f'Set pack format as: {data["pack_format"]["new"]}')
-					else:
-						packMcmeta["pack"]["pack_format"] = data["pack_format"]["old"]
-						print(f'Set pack format as: {data["pack_format"]["old"]}')
-		
-					with open(f"{outputDirectory}/pack.mcmeta", "w") as out_file:
-						out_file.write(dumps(packMcmeta, indent = 2))
-	
+					try:
+						with open(mcmetaDir) as json_file:
+								packMcmeta = load(json_file)
+						if upgrade == True:
+							packMcmeta["pack"]["pack_format"] = data["pack_format"]["new"]
+							print(f'Set pack format as: {data["pack_format"]["new"]}')
+						else:
+							packMcmeta["pack"]["pack_format"] = data["pack_format"]["old"]
+							print(f'Set pack format as: {data["pack_format"]["old"]}')
+			
+						with open(f"{outputDirectory}/pack.mcmeta", "w") as out_file:
+							out_file.write(dumps(packMcmeta, indent = 2))
+					except:
+						print("Failed to edit pack.mcmeta due to invalid JSON")
+
 			if "special" in data:
 				if "chests" in data["special"]:
 					chests(outputDirectory, upgrade, emissiveString)
@@ -132,7 +134,7 @@ try:
 						if path.isdir(mcpatcherDir) and not path.isdir(optifineDir):
 							rename(mcpatcherDir, optifineDir)
 							print(f"Renamed the mcpatcher folder to optifine")
-	
+
 			if "editing" in data:
 				if "spritesheet" in data["editing"]:
 					for spritesheet in data["editing"]["spritesheet"]:
@@ -203,7 +205,7 @@ try:
 										imgNew.paste(imgTemp, (int(edit["oldLocation"]["x"]*m), int(edit["oldLocation"]["y"]*m)))
 									imgNew.save(texture)
 									print(f"Edited {texture}")
-	
+
 			if "files" in data:
 				if "move" in data["files"]:
 					for (oldLocation, newLocation) in data["files"]["move"].items():
@@ -282,14 +284,14 @@ try:
 								removeFile(f"{file[:-4]}{emissiveString}.png")
 							if path.isfile(f"{file[:-7]}.mcmeta"):
 								removeFile(f"{file[:-7]}.mcmeta")
-	
+
 			if upgrade == True:
 				outputVersion = f"{outputVersion.split('.')[0]}.{int(outputVersion.split('.')[1])+1}"
 				version = f"{str(version).split('.')[0]}.{int(str(version).split('.')[1])+1}"
 			else:
 				outputVersion = f"{outputVersion.split('.')[0]}.{int(outputVersion.split('.')[1])-1}"
 				version = f"{version.split('.')[0]}.{int(version.split('.')[1])-1}"
-	
+
 		folders = list(walk(outputDirectory))[1:]
 		folders.sort(key = len)
 		folders.reverse()
@@ -302,22 +304,22 @@ try:
 					continue
 
 		input("\n\n\nFinished conversion\nPress ENTER to quit...")
-	
+
 	def moveFile(dir1, dir2):
 		move(dir1, dir2)
 		print(f"Moved {dir1}\n\tto {dir2}")
-	
+
 	def copyFile(dir1, dir2):
 		copy(dir1, dir2)
 		print(f"Copied {dir1}\n\tto {dir2}")
-	
+
 	def removeFile(dir1):
 		remove(dir1)
 		print(f"Removed {dir1}")
-	
+
 	def swap(item1, item2):
 		return item2, item1
-	
+
 	def leaves(outputDirectory, upgrade, emissive):
 		with open(resource_path("files/mappings.json")) as jsonFile:
 			data = load(jsonFile)
@@ -338,7 +340,7 @@ try:
 						if path.isfile(emissiveLeafDir) and not path.isfile(emissiveOutputLeafDir):
 							copy(emissiveLeafDir, emissiveOutputLeafDir)
 							print(f"Created {emissiveOutputLeafDir}")
-	
+
 	def chests(outputDirectory, upgrade, emissiveString):
 		with open(resource_path("files/mappings.json")) as jsonFile:
 			data = load(jsonFile)
@@ -367,50 +369,50 @@ try:
 							doubleChestDowngrade(leftChestDir, rightChestDir, emissiveString)
 							if not emissiveString == None and path.isfile(f"{leftChestDir[:-4]}{emissiveString}.png") and path.isfile(f"{rightChestDir[:-4]}{emissiveString}.png"):
 								doubleChestDowngrade(f"{leftChestDir[:-4]}{emissiveString}.png", f"{rightChestDir[:-4]}{emissiveString}.png", emissiveString)
-	
+
 	def singleChest(dir1):
 		img = Image.open(dir1)
-	
+
 		width, height = img.size
-	
+
 		dir2 = path.dirname(dir1)
 		file = path.basename(dir1).rsplit(".", 1)[0]
-	
+
 		m = height / 64
-	
+
 		lidTop = img.crop((int(14*m), 0, int(28*m), int(14*m)))
 		lidTop = ImageOps.flip(lidTop)
-	
+
 		lidBottom = img.crop((int(28*m), 0, int(42*m), int(14*m)))
 		lidBottom = ImageOps.flip(lidBottom)
-	
+
 		baseTop = img.crop((int(14*m), int(19*m), int(28*m), int(33*m)))
 		baseTop = ImageOps.flip(baseTop)
-	
+
 		baseBottom = img.crop((int(28*m), int(19*m), int(42*m), int(33*m)))
 		baseBottom = ImageOps.flip(baseBottom)
-	
+
 		knobTop = img.crop((int(1*m), 0, int(3*m), int(1*m)))
 		knobBottom = img.crop((int(3*m), 0, int(5*m), int(1*m)))
-	
+
 		lidEast = img.crop((0, int(14*m), int(14*m), int(19*m)))
 		lidEast = lidEast.rotate(180)
-	
+
 		leftLidSides = img.crop((int(14*m), int(14*m), int(56*m), int(19*m)))
 		leftLidSides = leftLidSides.rotate(180)
-	
+
 		baseEast = img.crop((0, int(33*m), int(14*m), int(43*m)))
 		baseEast = baseEast.rotate(180)
-	
+
 		baseSides = img.crop((int(14*m), int(33*m), int(56*m), int(43*m)))
 		baseSides = baseSides.rotate(180)
-	
+
 		knobEast = img.crop((0, int(1*m), int(1*m), int(5*m)))
 		knobEast = knobEast.rotate(180)
-	
+
 		knobSides = img.crop((int(1*m), int(1*m), int(6*m), int(5*m)))
 		knobSides = knobSides.rotate(180)
-	
+
 		img.paste(lidTop,(int(28*m), 0))
 		img.paste(lidBottom,(int(14*m), 0))
 		img.paste(baseTop,(int(28*m), int(19*m)))
@@ -423,53 +425,53 @@ try:
 		img.paste(baseSides,(int(14*m), int(33*m)))
 		img.paste(knobEast,(0, int(1*m)))
 		img.paste(knobSides,(int(1*m), int(1*m)))
-	
+
 		img.save(f"{dir2}/{file}.png")
 		print(f"Edited: {dir2}/{file}.png")
-	
+
 	def doubleChestUpgrade(dir1, emissiveString):
 		img = Image.open(dir1)
-	
+
 		width, height = img.size
-	
+
 		dir2 = path.dirname(dir1)
 		file = path.basename(dir1).rsplit(".", 1)[0].replace("_double", "")
-	
+
 		m = height / 64
-	
+
 		lidTop = img.crop((int(14*m), 0, int(44*m), int(14*m)))
 		lidTop = ImageOps.flip(lidTop)
-	
+
 		lidBottom = img.crop((int(44*m), 0, int(74*m), int(14*m)))
 		lidBottom = ImageOps.flip(lidBottom)
-	
+
 		baseTop = img.crop((int(14*m), int(19*m), int(44*m), int(33*m)))
 		baseTop = ImageOps.flip(baseTop)
-	
+
 		baseBottom = img.crop((int(44*m), int(19*m), int(74*m), int(33*m)))
 		baseBottom = ImageOps.flip(baseBottom)
-	
+
 		knobTop = img.crop((int(1*m), 0, int(3*m), int(1*m)))
 		knobBottom = img.crop((int(3*m), 0, int(5*m), int(1*m)))
-	
+
 		lidEast = img.crop((0, int(14*m), int(14*m), int(19*m)))
 		lidEast = lidEast.rotate(180)
-	
+
 		leftLidSides = img.crop((int(14*m), int(14*m), int(88*m), int(19*m)))
 		leftLidSides = leftLidSides.rotate(180)
-	
+
 		baseEast = img.crop((0, int(33*m), int(14*m), int(43*m)))
 		baseEast = baseEast.rotate(180)
-	
+
 		baseSides = img.crop((int(14*m), int(33*m), int(88*m), int(43*m)))
 		baseSides = baseSides.rotate(180)
-	
+
 		knobEast = img.crop((0, int(1*m), int(1*m), int(5*m)))
 		knobEast = knobEast.rotate(180)
-	
+
 		knobSides = img.crop((int(1*m), int(1*m), int(6*m), int(5*m)))
 		knobSides = knobSides.rotate(180)
-	
+
 		img.paste(lidTop,(int(44*m), 0))
 		img.paste(lidBottom,(int(14*m), 0))
 		img.paste(baseTop,(int(44*m), int(19*m)))
@@ -482,39 +484,39 @@ try:
 		img.paste(baseSides,(int(14*m), int(33*m)))
 		img.paste(knobEast,(0, int(1*m)))
 		img.paste(knobSides,(int(1*m), int(1*m)))
-	
+
 		leftLidTop = img.crop((int(59*m), 0, int(74*m), int(14*m)))
 		rightLidTop = img.crop((int(44*m), 0, int(59*m), int(14*m)))
-	
+
 		leftLidBottom = img.crop((int(29*m), 0, int(44*m), int(14*m)))
 		rightLidBottom = img.crop((int(14*m), 0, int(29*m), int(14*m)))
-	
+
 		leftBaseTop = img.crop((int(59*m), int(19*m), int(74*m), int(33*m)))
 		rightBaseTop = img.crop((int(44*m), int(19*m), int(59*m), int(33*m)))
-	
+
 		leftBaseBottom = img.crop((int(29*m), int(19*m), int(44*m), int(33*m)))
 		rightBaseBottom = img.crop((int(14*m), int(19*m), int(29*m), int(33*m)))
-	
+
 		leftKnobTop = img.crop((int(2*m), 0, int(3*m), int(1*m)))
 		rightKnobTop = img.crop((int(1*m), 0, int(2*m), int(1*m)))
-	
+
 		leftKnobBottom = img.crop((int(4*m), 0, int(5*m), int(1*m)))
 		rightKnobBottom = img.crop((int(3*m), 0, int(4*m), int(1*m)))
-	
+
 		leftLidSides = img.crop((int(29*m), int(14*m), int(73*m), int(19*m)))
 		rightLidFront = img.crop((int(73*m), int(14*m), int(88*m), int(19*m)))
 		rightLidSides = img.crop((0, int(14*m), int(29*m), int(19*m)))
-	
+
 		leftBaseSides = img.crop((int(29*m), int(33*m), int(73*m), int(43*m)))
 		rightBaseFront = img.crop((int(73*m), int(33*m), int(88*m), int(43*m)))
 		rightBaseSides = img.crop((0, int(33*m), int(29*m), int(43*m)))
-	
+
 		leftKnobSides = img.crop((int(2*m), int(1*m), int(5*m), int(5*m)))
 		rightKnobFront = img.crop((int(5*m), int(1*m), int(6*m), int(5*m)))
 		rightKnobSides = img.crop((0, int(1*m), int(2*m), int(5*m)))
-	
+
 		leftImg = Image.new("RGBA", (int(64*m), int(64*m)), (0, 0, 0, 0))
-	
+
 		leftImg.paste(leftLidTop,(int(29*m), 0))
 		leftImg.paste(leftLidBottom,(int(14*m), 0))
 		leftImg.paste(leftBaseTop,(int(29*m), int(19*m)))
@@ -524,9 +526,9 @@ try:
 		leftImg.paste(leftKnobTop,(int(1*m), 0))
 		leftImg.paste(leftKnobBottom,(int(2*m), 0))
 		leftImg.paste(leftKnobSides,(int(1*m), int(1*m)))
-	
+
 		rightImg = Image.new("RGBA", (int(64*m), int(64*m)), (0, 0, 0, 0))
-	
+
 		rightImg.paste(rightLidTop,(int(29*m), 0))
 		rightImg.paste(rightLidBottom,(int(14*m), 0))
 		rightImg.paste(rightBaseTop,(int(29*m), int(19*m)))
@@ -539,7 +541,7 @@ try:
 		rightImg.paste(rightKnobBottom,(int(2*m), 0))
 		rightImg.paste(rightKnobSides,(0, int(1*m)))
 		rightImg.paste(rightKnobFront,(int(3*m), int(1*m)))
-	
+
 		if not emissiveString == None and file.endswith(emissiveString):
 			leftFile = f"{dir2}/{file[:-len(emissiveString)]}_left{emissiveString}.png"
 			rightFile = f"{dir2}/{file[:-len(emissiveString)]}_right{emissiveString}.png"
@@ -549,124 +551,124 @@ try:
 		leftImg.save(leftFile)
 		rightImg.save(rightFile)
 		print(f"Created: {leftFile}\nCreated: {rightFile}")
-	
+
 	def doubleChestDowngrade(leftChestDir, rightChestDir, emissiveString):
 		leftChest = Image.open(leftChestDir)
 		rightChest = Image.open(rightChestDir)
-	
+
 		width, height = leftChest.size
-	
+
 		m = height / 64
-	
+
 		img = Image.new("RGBA", (int(128*m), int(64*m)))
-	
+
 		leftLidBottom = leftChest.crop((int(14*m), 0, int(29*m), int(14*m)))
 		leftLidBottom = ImageOps.flip(leftLidBottom)
 		img.paste(leftLidBottom, (int(59*m), 0))
-	
+
 		rightLidBottom = rightChest.crop((int(14*m), 0, int(29*m), int(14*m)))
 		rightLidBottom = ImageOps.flip(rightLidBottom)
 		img.paste(rightLidBottom, (int(44*m), 0))
-	
+
 		leftLidTop = leftChest.crop((int(29*m), 0, int(44*m), int(14*m)))
 		leftLidTop = ImageOps.flip(leftLidTop)
 		img.paste(leftLidTop, (int(29*m), 0))
-	
+
 		rightLidTop = rightChest.crop((int(29*m), 0, int(44*m), int(14*m)))
 		rightLidTop = ImageOps.flip(rightLidTop)
 		img.paste(rightLidTop, (int(14*m), 0))
-	
+
 		leftKnobTop = leftChest.crop((int(1*m), 0, int(2*m), int(1*m)))
 		leftKnobTop = ImageOps.flip(leftKnobTop)
 		img.paste(leftKnobTop, (int(4*m), 0))
-	
+
 		rightKnobTop = leftChest.crop((int(2*m), 0, int(3*m), int(1*m)))
 		rightKnobTop = ImageOps.flip(rightKnobTop)
 		img.paste(rightKnobTop, (int(2*m), 0))
-	
+
 		leftKnobTop = rightChest.crop((int(1*m), 0, int(2*m), int(1*m)))
 		leftKnobTop = ImageOps.flip(leftKnobTop)
 		img.paste(leftKnobTop, (int(3*m), 0))
-	
+
 		rightKnobTop = rightChest.crop((int(2*m), 0, int(3*m), int(1*m)))
 		rightKnobTop = ImageOps.flip(rightKnobTop)
 		img.paste(rightKnobTop, (int(1*m), 0))
-	
+
 		leftBaseBottom = leftChest.crop((int(14*m), int(19*m), int(29*m), int(33*m)))
 		leftBaseBottom = ImageOps.flip(leftBaseBottom)
 		img.paste(leftBaseBottom, (int(59*m), int(19*m)))
-	
+
 		rightBaseBottom = rightChest.crop((int(14*m), int(19*m), int(29*m), int(33*m)))
 		rightBaseBottom = ImageOps.flip(rightBaseBottom)
 		img.paste(rightBaseBottom, (int(44*m), int(19*m)))
-	
+
 		leftBaseTop = leftChest.crop((int(29*m), int(19*m), int(44*m), int(33*m)))
 		leftBaseTop = ImageOps.flip(leftBaseTop)
 		img.paste(leftBaseTop, (int(29*m), int(19*m)))
-	
+
 		rightBaseTop = rightChest.crop((int(29*m), int(19*m), int(44*m), int(33*m)))
 		rightBaseTop = ImageOps.flip(rightBaseTop)
 		img.paste(rightBaseTop, (int(14*m), int(19*m)))
-	
+
 		leftLidSides = leftChest.crop((int(14*m), int(14*m), int(58*m), int(19*m)))
 		leftLidSides = leftLidSides.rotate(180)
 		img.paste(leftLidSides, (int(29*m), int(14*m)))
-	
+
 		rightLidEast = rightChest.crop((0, int(14*m), int(14*m), int(19*m)))
 		rightLidEast = rightLidEast.rotate(180)
 		img.paste(rightLidEast, (0, int(14*m)))
-	
+
 		rightLidFront = rightChest.crop((int(14*m), int(14*m), int(29*m), int(19*m)))
 		rightLidFront = rightLidFront.rotate(180)
 		img.paste(rightLidFront, (int(73*m), int(14*m)))
-	
+
 		rightLidWest = rightChest.crop((int(43*m), int(14*m), int(58*m), int(19*m)))
 		rightLidWest = rightLidWest.rotate(180)
 		img.paste(rightLidWest, (int(14*m), int(14*m)))
-	
+
 		leftBaseSides = leftChest.crop((int(14*m), int(33*m), int(58*m), int(43*m)))
 		leftBaseSides = leftBaseSides.rotate(180)
 		img.paste(leftBaseSides, (int(29*m), int(33*m)))
-	
+
 		rightBaseEast = rightChest.crop((0, int(33*m), int(14*m), int(43*m)))
 		rightBaseEast = rightBaseEast.rotate(180)
 		img.paste(rightBaseEast, (0, int(33*m)))
-	
+
 		rightBaseWest = rightChest.crop((int(14*m), int(33*m), int(29*m), int(43*m)))
 		rightBaseWest = rightBaseWest.rotate(180)
 		img.paste(rightBaseWest, (int(73*m), int(33*m)))
-	
+
 		rightBaseFront = rightChest.crop((int(43*m), int(33*m), int(58*m), int(43*m)))
 		rightBaseFront = rightBaseFront.rotate(180)
 		img.paste(rightBaseFront, (int(14*m), int(33*m)))
-	
+
 		leftKnobSides = leftChest.crop((int(1*m), int(1*m), int(4*m), int(5*m)))
 		leftKnobSides = leftKnobSides.rotate(180)
 		img.paste(leftKnobSides, (int(2*m), int(1*m)))
-	
+
 		rightKnobEast = rightChest.crop((0, int(1*m), int(1*m), int(5*m)))
 		rightKnobEast = rightKnobEast.rotate(180)
 		img.paste(rightKnobEast, (0, int(1*m)))
-	
+
 		rightKnobWest = rightChest.crop((int(1*m), int(1*m), int(2*m), int(5*m)))
 		rightKnobWest = rightKnobWest.rotate(180)
 		img.paste(rightKnobWest, (int(5*m), int(1*m)))
-	
+
 		rightKnobFront = rightChest.crop((int(3*m), int(1*m), int(4*m), int(5*m)))
 		rightKnobFront = rightKnobFront.rotate(180)
 		img.paste(rightKnobFront, (int(1*m), int(1*m)))
-	
+
 		file = path.basename(leftChestDir).rsplit(".", 1)[0].replace("_left", "_double")
-	
+
 		outFile = path.join(path.dirname(leftChestDir), f"{file}.png")
 		img.save(outFile)
 		print(f"Created: {outFile}")
-	
+
 	def mojang(outputDirectory, upgrade):
 		if upgrade == True:
 			file = path.join(outputDirectory, "assets/minecraft/textures/gui/title/mojang.png")
 			if path.isfile(file):
-				mojangUpgrade(file)
+				mojangConversion(file, "upgrade")
 				colourProperties = path.join(outputDirectory, "assets/minecraft/optifine/color.properties")
 				if path.isfile(colourProperties):
 					with open(colourProperties) as file:
@@ -683,58 +685,42 @@ try:
 		else:
 			file = path.join(outputDirectory, "assets/minecraft/textures/gui/title/mojangstudios.png")
 			if path.isfile(file):
-				mojangDowngrade(file)
-	
-	def mojangUpgrade(dir1):
+				mojangConversion(file, "downgrade")
+
+	def mojangConversion(dir1, mode):
 		img = Image.open(dir1)
-	
-		width, height = img.size
-	
-		if width < 512 or height < 512:
-			img = img.resize((512, 512), Image.NEAREST)
-			width, height = img.size
-	
 		dir2 = path.dirname(dir1)
-		file = path.basename(dir1).rsplit(".", 1)[0]
-	
-		m = height // 512
-	
-		leftSide = img.crop((0, 192*m, 256*m, 320*m))
-		rightSide = img.crop((256*m, 192*m, 512*m, 320*m))
-	
-		newImg = Image.new("RGBA", (256*m, 256*m))
-	
-		newImg.paste(leftSide,(0, 0))
-		newImg.paste(rightSide,(0, 128*m))
-	
-		newImg.save(f"{dir2}/{file}studios.png")
-		print(f"Created {dir2}/{file}studios.png")
-	
-	def mojangDowngrade(dir1):
-		img = Image.open(dir1)
-	
-		width, height = img.size
-	
-		if width < 256 or height < 256:
-			img = img.resize((256, 256), Image.NEAREST)
-			width, height = img.size
-	
-		dir2 = path.dirname(dir1)
-		file = path.basename(dir1).rsplit(".", 1)[0]
-	
-		m = height // 256
-	
-		leftSide = img.crop((0, 0*m, 256*m, 128*m))
-		rightSide = img.crop((0*m, 128*m, 256*m, 256*m))
-	
-		newImg = Image.new('RGBA', (512*m, 512*m), (0, 0, 0, 0))
-	
-		newImg.paste(leftSide,(0, 192*m))
-		newImg.paste(rightSide,(256, 192*m))
-	
-		newImg.save(f"{dir2}/mojang.png")
-		print(f"Created {dir2}/mojang.png")
-	
+		if mode == "upgrade":
+			img = img.crop(img.getbbox())
+			if img.size[0] < img.size[1] * 4:
+				imgNew = Image.new("RGBA", (img.size[1] * 4 + 16, img.size[1] + 4))
+				imgNew.paste(img, ((img.size[1] * 4 - img.size[0]) // 2 + 8, 2))
+			elif img.size[0] > img.size[1] * 4:
+				imgNew = Image.new("RGBA", (img.size[0] + 16, img.size[0] // 4 + 4))
+				imgNew.paste(img, (8, (img.size[1] // 4) // 2 + 2))
+			else:
+				imgNew = Image.new("RGBA", (img.size[0] + 16, img.size[1] + 4))
+				imgNew.paste(img, (8, 2))
+			if imgNew.size[0] > 2048:
+				imgNew = imgNew.resize((2048, 512), Image.NEAREST)
+			imgFinal = Image.new("RGBA", (imgNew.size[0] // 2, imgNew.size[0] // 2))
+			imgFinal.paste(imgNew, (0, 0))
+			imgFinal.paste(imgNew, (-imgNew.size[0] // 2, imgNew.size[0] // 4))
+			imgFinal.save(f"{dir2}/mojangstudios.png")
+			print(f"Converted {dir2}/mojang.png\n\tto {dir2}/mojangstudios.png")
+		elif mode == "downgrade":
+			if img.size[0] != img.size[1]:
+				print("Image is not a square. Invalid logo")
+				exit()
+			imgNew = Image.new("RGBA", (img.size[0] * 2, img.size[0] // 2))
+			imgNew.paste(img.crop((0, 0, img.size[0], img.size[1] // 2)))
+			imgNew.paste(img.crop((0, img.size[1] // 2, img.size[0], img.size[1])), (img.size[0], 0))
+			img = imgNew.crop(imgNew.getbbox())
+			imgFinal = Image.new("RGBA", (img.size[0], img.size[0]))
+			imgFinal.paste(img, (0, (imgFinal.size[1] - img.size[1]) // 2))
+			imgFinal.save(f"{dir2}/mojang.png")
+			print(f"Converted {dir2}/mojangstudios.png\n\tto {dir2}/mojang.png")
+
 	def redstone(dir1, upgrade):
 		if upgrade == True:
 			overlay = path.join(dir1, "assets/minecraft/textures/blocks/redstone_dust_cross_overlay.png")
@@ -798,7 +784,7 @@ try:
 				if lineMode == 0:
 					if path.isfile(line1):
 						removeFile(line1)
-	
+
 	def gui7(dir1, upgrade):
 		file = path.join(dir1, "assets/minecraft/textures/gui/container/enchanting_table.png")
 		if path.isfile(file):
@@ -824,7 +810,7 @@ try:
 				img.paste(textField, (int(59*m), int(14*m)))
 			img.save(file)
 			print(f"Edited {file}")
-	
+
 	def gui8(dir1, upgrade):
 		file = path.join(dir1, "assets/minecraft/textures/gui/container/brewing_stand.png")
 		if path.isfile(file):
@@ -893,8 +879,7 @@ try:
 				img.paste(blank2, (int(161*m), int(27*m)))
 			img.save(file)
 			print(f"Edited {file}")
-	
-	converter()
 
+	converter()
 except Exception as e:
 	input(f"-- ERROR --\n\n{e}")
