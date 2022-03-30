@@ -1,0 +1,29 @@
+{
+	"pack_format": {
+		"old": 7,
+		"new": 8
+	},
+	"files": {
+		"new": [
+			"assets/minecraft/models/block/light_00.json",
+			"assets/minecraft/models/block/light_01.json",
+			"assets/minecraft/models/block/light_02.json",
+			"assets/minecraft/models/block/light_03.json",
+			"assets/minecraft/models/block/light_04.json",
+			"assets/minecraft/models/block/light_05.json",
+			"assets/minecraft/models/block/light_06.json",
+			"assets/minecraft/models/block/light_07.json",
+			"assets/minecraft/models/block/light_08.json",
+			"assets/minecraft/models/block/light_09.json",
+			"assets/minecraft/models/block/light_10.json",
+			"assets/minecraft/models/block/light_11.json",
+			"assets/minecraft/models/block/light_12.json",
+			"assets/minecraft/models/block/light_13.json",
+			"assets/minecraft/models/block/light_14.json",
+			"assets/minecraft/models/block/light_15.json",
+			"assets/minecraft/models/item/music_disc_otherside.json",
+			"assets/minecraft/textures/font/asciillager.png",
+			"assets/minecraft/textures/item/music_disc_otherside.png"
+		]
+	}
+}
