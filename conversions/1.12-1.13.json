@@ -131,7 +131,7 @@
 			"assets/minecraft/textures/items/fish_clownfish_raw.png": "assets/minecraft/textures/item/tropical_fish.png",
 			"assets/minecraft/textures/items/fish_cod_cooked.png": "assets/minecraft/textures/item/cooked_cod.png",
 			"assets/minecraft/textures/items/fish_cod_raw.png": "assets/minecraft/textures/item/cod.png",
-			"assets/minecraft/textures/items/fish_pufferfish_raw.png": "assets/minecraft/textures/entity/fish/pufferfish.png",
+			"assets/minecraft/textures/items/fish_pufferfish_raw.png": "assets/minecraft/textures/item/pufferfish.png",
 			"assets/minecraft/textures/items/fish_salmon_cooked.png": "assets/minecraft/textures/item/cooked_salmon.png",
 			"assets/minecraft/textures/items/fish_salmon_raw.png": "assets/minecraft/textures/item/salmon.png",
 			"assets/minecraft/textures/items/iron_nugget.png": "assets/minecraft/textures/item/iron_nugget.png",
